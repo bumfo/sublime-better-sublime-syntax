@@ -478,6 +478,8 @@ contexts:
             - include: 'scope:source.oniregexp'
             - match: '(?=\S)'
               pop: true
+          with_prototype:
+            - include: variables-in-regexp
         - match: "'"
           scope: punctuation.definition.string.begin.yaml
           push: [last-single-quote, quoted-regexp]
@@ -545,7 +547,7 @@ contexts:
           set:
             - match: '^(?=\S)'
               pop: true
-            - scope: constant.variable
+            - scope: constant.variable entity.name.tag
               match: '[A-Za-z\-_]+(?=: )'
               push: regex-value
         - scope: keyword.contexts
@@ -553,7 +555,6 @@ contexts:
         - scope: keyword.match
           match: '\b(?:match)\b'
           set: regex-value
-
         - scope: keyword.other
           match: '\b(?:set|push|pop|scope|include|meta_scope|meta_content_scope|meta_include_prototype|with_prototype|captures|name|file_extensions|first_line_match|comment)\b'
         - match: '{{ns_plain_first_plain_out}}'
