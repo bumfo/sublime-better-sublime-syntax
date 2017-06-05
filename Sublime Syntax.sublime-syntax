@@ -471,7 +471,7 @@ contexts:
 
   regex-value:
     - scope: punctuation.separator.key-value.mapping.yaml2
-      match: :(?=\s|$)
+      match: ':(?=\s|$)'
       set:
         - match: '\|\-'
           set:
@@ -482,7 +482,7 @@ contexts:
             - include: variables-in-regexp
         - match: "'"
           scope: punctuation.definition.string.begin.yaml
-          push: [last-single-quote, quoted-regexp]
+          set: [last-single-quote, quoted-regexp]
           with_prototype:
             - include: variables-in-regexp
             - match: "''"
@@ -491,7 +491,7 @@ contexts:
               pop: true
         - match: '"'
           scope: punctuation.definition.string.begin.yaml
-          push: [last-double-quote, quoted-regexp]
+          set: [last-double-quote, quoted-regexp]
           with_prototype:
             - include: variables-in-regexp
             - match: '{{c_ns_esc_char}}'
@@ -552,6 +552,14 @@ contexts:
               push: regex-value
         - scope: keyword.contexts
           match: '^(?:contexts)\b'
+          set:
+            - match: ':'
+              set:
+                - match: '^(?=\S)'
+                  pop: true
+                - scope: variable.other.repository-key.sublime-syntax
+                  match: '(?<=^  )[\-A-Za-z_]+(?=:)'
+                - include: node
         - scope: keyword.match
           match: '\b(?:match)\b'
           set: regex-value
