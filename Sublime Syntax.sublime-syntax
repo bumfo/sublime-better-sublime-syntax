@@ -469,6 +469,43 @@ contexts:
       scope: punctuation.definition.string.end.yaml
       pop: true
 
+  regex-value:
+    - scope: punctuation.separator.key-value.mapping.yaml2
+      match: :(?=\s|$)
+      set:
+        - match: '\|\-'
+          set:
+            - include: 'scope:source.oniregexp'
+            - match: '(?=\S)'
+              pop: true
+        - match: "'"
+          scope: punctuation.definition.string.begin.yaml
+          push: [last-single-quote, quoted-regexp]
+          with_prototype:
+            - include: variables-in-regexp
+            - match: "''"
+              scope: constant.character.escape.single-quoted.yaml
+            - match: "(?=')"
+              pop: true
+        - match: '"'
+          scope: punctuation.definition.string.begin.yaml
+          push: [last-double-quote, quoted-regexp]
+          with_prototype:
+            - include: variables-in-regexp
+            - match: '{{c_ns_esc_char}}'
+              scope: constant.character.escape.double-quoted.yaml
+            - match: \\\n
+              scope: constant.character.escape.double-quoted.newline.yaml
+            - match: '(?=")'
+              pop: true
+        - match: '(?=\S)'
+          set:
+            - include: 'scope:source.oniregexp'
+            - match: '(?=\S)'
+              pop: true
+          # with_prototype:
+          #   - include: variables-in-regexp
+
   block-pair:
     - match: \?
       scope: punctuation.definition.key-value.begin.yaml
@@ -506,43 +543,16 @@ contexts:
         - scope: keyword.variables
           match: '^(?:variables)\b'
           set:
-            - match: '(?=\S)'
+            - match: '^(?=\S)'
               pop: true
+            - scope: constant.variable
+              match: '[A-Za-z\-_]+(?=: )'
+              push: regex-value
         - scope: keyword.contexts
           match: '^(?:contexts)\b'
         - scope: keyword.match
           match: '\b(?:match)\b'
-          set:
-            - scope: punctuation.separator.key-value.mapping.yaml2
-              match: :(?=\s|$)
-              set:
-                - match: "'"
-                  scope: punctuation.definition.string.begin.yaml
-                  push: [last-single-quote, quoted-regexp]
-                  with_prototype:
-                    - include: variables-in-regexp
-                    - match: "''"
-                      scope: constant.character.escape.single-quoted.yaml
-                    - match: "(?=')"
-                      pop: true
-                - match: '"'
-                  scope: punctuation.definition.string.begin.yaml
-                  push: [last-double-quote, quoted-regexp]
-                  with_prototype:
-                    - include: variables-in-regexp
-                    - match: '{{c_ns_esc_char}}'
-                      scope: constant.character.escape.double-quoted.yaml
-                    - match: \\\n
-                      scope: constant.character.escape.double-quoted.newline.yaml
-                    - match: '(?=")'
-                      pop: true
-                - match: '(?=\S)'
-                  set:
-                    - include: 'scope:source.oniregexp'
-                    - match: '(?=\S)'
-                      pop: true
-                  with_prototype:
-                    - include: variables-in-regexp
+          set: regex-value
 
         - scope: keyword.other
           match: '\b(?:set|push|pop|scope|include|meta_scope|meta_content_scope|meta_include_prototype|with_prototype|captures|name|file_extensions|first_line_match|comment)\b'
