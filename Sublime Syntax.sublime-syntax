@@ -558,7 +558,7 @@ contexts:
                 - match: '^(?=\S)'
                   pop: true
                 - scope: variable.other.repository-key.sublime-syntax
-                  match: '(?<=^  )[\-A-Za-z_]+(?=:)'
+                  match: '(?<=^  )[\-A-Za-z_][\-A-Za-z_0-9]*(?=:)'
                 - include: node
         - scope: keyword.match
           match: '\b(?:match)\b'
