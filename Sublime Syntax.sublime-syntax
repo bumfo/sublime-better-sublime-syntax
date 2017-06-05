@@ -505,8 +505,8 @@ contexts:
             - include: 'scope:source.oniregexp'
             - match: '(?=\S)'
               pop: true
-          # with_prototype:
-          #   - include: variables-in-regexp
+          with_prototype:
+            - include: variables-in-regexp
 
   block-pair:
     - match: \?
