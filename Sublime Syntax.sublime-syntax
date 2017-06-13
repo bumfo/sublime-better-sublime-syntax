@@ -548,7 +548,7 @@ contexts:
             - match: '^(?=\S)'
               pop: true
             - scope: constant.variable entity.name.tag
-              match: '[A-Za-z\-_]+(?=: )'
+              match: '[A-Za-z\-_][A-Za-z0-9\-_]*(?=: )'
               push: regex-value
         - scope: keyword.contexts
           match: '^(?:contexts)\b'
